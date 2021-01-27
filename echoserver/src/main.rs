@@ -9,18 +9,18 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 fn echo_server(address: &str) -> Result<(), Box<dyn Error>> {
-    let listener = TcpListener::bind(address)?; // [1]
+    let listener = TcpListener::bind(address)?;
     loop {
-        let (mut stream, _) = listener.accept()?; // [2] // スレッドを立ち上げて接続に対処する。 
-        thread::spawn(move || { // [3]
+        let (mut stream, _) = listener.accept()?; 
+        thread::spawn(move || {
         let mut buffer = [0u8; 1024];
         loop {
-            let nbytes = stream.read(&mut buffer).unwrap(); // [4]
-            if nbytes == 0 {                             // [6]
+            let nbytes = stream.read(&mut buffer).unwrap();
+            if nbytes == 0 {
                 return; 
             }
             print!("{}", str::from_utf8(&buffer[..nbytes]).unwrap());
-            stream.write_all(&buffer[..nbytes]).unwrap(); // [5]
+            stream.write_all(&buffer[..nbytes]).unwrap();
                 }
         });
     }
